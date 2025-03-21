@@ -31,7 +31,7 @@ def run_etl():
     etl_dim_time(df, con)
     etl_dim_location(df, con)
     etl_dim_device(df, con)
-    # etl_dim_type(df, con)
+    etl_dim_type(df, con)
     etl_fact_transaction(df, con)
 
   except FileNotFoundError:

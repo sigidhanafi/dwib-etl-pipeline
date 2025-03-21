@@ -10,16 +10,13 @@ def etl_fact_transaction(df, con):
         existing_ids = set(existing_ids_df["TransactionID"])
         new_transaction_df = df[~df["TransactionID"].isin(existing_ids)]
 
-        if not new_transaction_df.empty:
-            print('PROSESS')
-        else:
+        if new_transaction_df.empty:
             print("\t\tℹ️  Tidak ada transaksi baru yang perlu dimuat.")
             return True
 
-
-
         # Transform: Konversi tanggal transaksi
-        df["TransactionDate"] = pd.to_datetime(df["TransactionDate"])
+        df["TransactionDate"] = pd.to_datetime(df["TransactionDate"], format="%d/%m/%Y %H:%M")
+        df["PreviousTransactionDate"] = pd.to_datetime(df["PreviousTransactionDate"], format="%d/%m/%Y %H:%M")
         df["TimeID"] = df["TransactionDate"].dt.strftime("%Y%m%d").astype(int)
         print("\t\t✅ Mapping TimeID berhasil!")
 

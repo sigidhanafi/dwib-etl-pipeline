@@ -8,14 +8,14 @@ def etl_dim_time(df, con):
         # Ambil tanggal transaksi unik
         dim_time_df = df[["TransactionDate"]].drop_duplicates().reset_index(drop=True)
         # Konversi ke format datetime
-        dim_time_df["TransactionDate"] = pd.to_datetime(dim_time_df["TransactionDate"])
+        dim_time_df["TransactionDate"] = pd.to_datetime(dim_time_df["TransactionDate"], format="%d/%m/%Y %H:%M")
         # Buat kolom TimeID dalam format YYMMDD
-        dim_time_df["TimeID"] = dim_time_df["TransactionDate"].dt.strftime('%y%m%d').astype(int)
+        dim_time_df["TimeID"] = dim_time_df["TransactionDate"].dt.strftime('%Y%m%d').astype(int)
 
         # hanya proses data baru 
         existing_ids_df = con.execute("SELECT TimeID FROM Dim_Time").fetchdf()
         existing_ids = set(existing_ids_df["TimeID"])
-        new_data = df[~dim_time_df["TimeID"].isin(existing_ids)]
+        new_data = dim_time_df[~dim_time_df["TimeID"].isin(existing_ids)]
 
         if new_data.empty:
             print("\t\tℹ️  Tidak ada baru yang perlu dimuat.")
