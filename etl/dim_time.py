@@ -8,9 +8,9 @@ def etl_dim_time(df, con):
         # Ambil tanggal transaksi unik
         dim_time_df = df[["TransactionDate"]].drop_duplicates().reset_index(drop=True)
         # Konversi ke format datetime
-        dim_time_df["TransactionDate"] = pd.to_datetime(dim_time_df["TransactionDate"], format="%d/%m/%Y %H:%M")
+        dim_time_df["TransactionDate"] = pd.to_datetime(dim_time_df["TransactionDate"], format="%Y-%m-%d %H:%M:%S")
         # Buat kolom TimeID dalam format YYMMDD
-        dim_time_df["TimeID"] = dim_time_df["TransactionDate"].dt.strftime('%Y%m%d').astype(int)
+        dim_time_df["TimeID"] = dim_time_df["TransactionDate"].dt.strftime("%Y%m%d").astype(int)
 
         # hanya proses data baru 
         existing_ids_df = con.execute("SELECT TimeID FROM Dim_Time").fetchdf()

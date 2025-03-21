@@ -84,13 +84,6 @@ def setup():
             FOREIGN KEY (ChannelID) REFERENCES Dim_Channel(ChannelID),
         );
 
-        CREATE INDEX idx_fact_transaction_customer ON Fact_Transaction(CustomerID);
-        CREATE INDEX idx_fact_transaction_device ON Fact_Transaction(DeviceID);
-        CREATE INDEX idx_fact_transaction_time ON Fact_Transaction(TimeID);
-        CREATE INDEX idx_fact_transaction_location ON Fact_Transaction(LocationID);
-        CREATE INDEX idx_fact_transaction_type ON Fact_Transaction(TransactionTypeID);
-        CREATE INDEX idx_fact_transaction_channel ON Fact_Transaction(ChannelID);
-
         """
 
         con.execute(ddl_script)

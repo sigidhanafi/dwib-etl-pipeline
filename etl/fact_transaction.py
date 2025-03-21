@@ -15,8 +15,8 @@ def etl_fact_transaction(df, con):
             return True
 
         # Transform: Konversi tanggal transaksi
-        df["TransactionDate"] = pd.to_datetime(df["TransactionDate"], format="%d/%m/%Y %H:%M")
-        df["PreviousTransactionDate"] = pd.to_datetime(df["PreviousTransactionDate"], format="%d/%m/%Y %H:%M")
+        df["TransactionDate"] = pd.to_datetime(df["TransactionDate"], format="%Y-%m-%d %H:%M:%S")
+        df["PreviousTransactionDate"] = pd.to_datetime(df["PreviousTransactionDate"], format="%Y-%m-%d %H:%M:%S")
         df["TimeID"] = df["TransactionDate"].dt.strftime("%Y%m%d").astype(int)
         print("\t\t✅ Mapping TimeID berhasil!")
 
