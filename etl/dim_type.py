@@ -1,37 +1,22 @@
 import duckdb
 import pandas as pd
 
-def etl_dim_time(df, con):
-    print("Memproses Dim_Time...")
+def etl_dim_type(df, con):
+    print("Memproses Dim_Transaction_Type...")
 
-    # Ambil tanggal transaksi unik
-    dim_time_df = df[["TransactionDate"]].drop_duplicates().reset_index(drop=True)
-
-    # Konversi ke format datetime
-    dim_time_df["TransactionDate"] = pd.to_datetime(dim_time_df["TransactionDate"])
-
-    # Buat kolom TimeID dalam format YYMMDD
-    dim_time_df["TimeID"] = dim_time_df["TransactionDate"].dt.strftime('%y%m%d').astype(int)
-
-    # Tambahkan informasi waktu lainnya
-    dim_time_df["Day"] = dim_time_df["TransactionDate"].dt.day
-    dim_time_df["Week"] = dim_time_df["TransactionDate"].dt.isocalendar().week
-    dim_time_df["Quartile"] = dim_time_df["TransactionDate"].dt.quarter
-    dim_time_df["Month"] = dim_time_df["TransactionDate"].dt.month
-    dim_time_df["Year"] = dim_time_df["TransactionDate"].dt.year
-
-    # Hapus kolom yang tidak dibutuhkan
-    dim_time_df = dim_time_df.drop(columns=["TransactionDate"])
+    # Ambil data unik TransactionType
+    dim_type_df = df[["TransactionType"]].drop_duplicates().reset_index(drop=True)
+    dim_type_df["TransactionTypeID"] = range(1, len(dim_type_df) + 1)
 
     # Insert ke DuckDB
     con.executemany(
         """
-        INSERT INTO Dim_Time (TimeID, Day, Week, Quartile, Month, Year)
-        VALUES (?, ?, ?, ?, ?, ?)
-        ON CONFLICT (TimeID) DO NOTHING;
+        INSERT INTO Dim_Transaction_Type (TransactionTypeID, TransactionType)
+        VALUES (?, ?)
+        ON CONFLICT (TransactionTypeID) DO NOTHING;
         """,
-        dim_time_df.values.tolist()
+        dim_type_df.values.tolist()
     )
 
-    df_count = con.execute("SELECT COUNT(*) AS row_count FROM Dim_Time").fetchone()[0]
-    print(f"✅ Dim_Time berhasil diproses! Jumlah baris di Dim_Time: {df_count}")
+    df_count = con.execute("SELECT COUNT(*) AS row_count FROM Dim_Transaction_Type").fetchone()[0]
+    print(f"✅ Dim_Transaction_Type berhasil diproses! Jumlah baris di Dim_Transaction_Type: {df_count}")
