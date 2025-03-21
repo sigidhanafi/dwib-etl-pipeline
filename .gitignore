@@ -1,1 +1,8 @@
+# Abaikan environment lokal (misal venv atau dwh-env)
 dwh-env/
+
+# Abaikan semua __pycache__ di seluruh project
+**/__pycache__/
+
+# Abaikan semua file pyc/pyo/pyd
+*.py[cod]
