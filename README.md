@@ -21,3 +21,14 @@
 ```bash
  python3 main.py
 ```
+
+
+
+### Note: If you run with Python VENV:
+```bash
+git clone git@github.com:sigidhanafi/dwib-etl-pipeline.git
+cd dwib-etl-pipeline
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
