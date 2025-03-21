@@ -5,6 +5,15 @@ def etl_dim_location(df, con):
     print("\t\tETL Dim_Location")
 
     try:
+        # hanya proses data baru 
+        existing_ids_df = con.execute("SELECT Location FROM Dim_Location").fetchdf()
+        existing_ids = set(existing_ids_df["Location"])
+        new_data = df[~df["Location"].isin(existing_ids)]
+
+        if new_data.empty:
+            print("\t\tℹ️  Tidak ada baru yang perlu dimuat.")
+            return True
+        
         # Ambil data lokasi unik
         dim_location_df = df[["Location"]].drop_duplicates()
 

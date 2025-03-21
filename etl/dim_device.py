@@ -5,6 +5,15 @@ def etl_dim_device(df, con):
     print("\t\tETL Dim_Device")
 
     try:
+        # hanya proses data baru 
+        existing_ids_df = con.execute("SELECT DeviceID FROM Dim_Device").fetchdf()
+        existing_ids = set(existing_ids_df["DeviceID"])
+        new_data = df[~df["DeviceID"].isin(existing_ids)]
+
+        if new_data.empty:
+            print("\t\tℹ️  Tidak ada baru yang perlu dimuat.")
+            return True
+        
         # Ambil data unik DeviceID dan IP Address
         dim_device_df = df[["DeviceID"]].drop_duplicates()
 

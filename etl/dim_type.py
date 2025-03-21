@@ -2,21 +2,23 @@ import duckdb
 import pandas as pd
 
 def etl_dim_type(df, con):
-    print("Memproses Dim_Transaction_Type...")
+  # ETL UNTUK Dim_Transaction_Type
+  print("Memproses Dim_Transaction_Type...")
 
-    # Ambil data unik TransactionType
-    dim_type_df = df[["TransactionType"]].drop_duplicates().reset_index(drop=True)
-    dim_type_df["TransactionTypeID"] = range(1, len(dim_type_df) + 1)
+  # Ambil data unik TransactionType
+  dim_type_df = df[["TransactionType"]].drop_duplicates()
 
-    # Insert ke DuckDB
-    con.executemany(
-        """
-        INSERT INTO Dim_Transaction_Type (TransactionTypeID, TransactionType)
-        VALUES (?, ?)
-        ON CONFLICT (TransactionTypeID) DO NOTHING;
-        """,
-        dim_type_df.values.tolist()
-    )
+  # Tambahkan nama TransactionTypeID jika tidak ada di CSV
+  id_mapping = {"Debit": 1, "Credit": 2}
+  dim_type_df["TransactionTypeID"] = df["TransactionType"].map(id_mapping)
 
-    df_count = con.execute("SELECT COUNT(*) AS row_count FROM Dim_Transaction_Type").fetchone()[0]
-    print(f"✅ Dim_Transaction_Type berhasil diproses! Jumlah baris di Dim_Transaction_Type: {df_count}")
+  # Insert ke DuckDB
+  for _, row in dim_type_df.iterrows():
+      con.execute(f"""
+          INSERT INTO Dim_Transaction_Type (TransactionTypeID, TransactionType)
+          VALUES ({row.TransactionTypeID}, '{row.TransactionType}')
+          ON CONFLICT (TransactionTypeID) DO NOTHING;
+      """)
+
+  df_count = con.execute("SELECT COUNT(*) AS row_count FROM Dim_Transaction_Type").fetchone()[0]
+  print(f"✅ Dim_Transaction_Type berhasil diproses! Jumlah baris di Dim_Transaction_Type: {df_count}")

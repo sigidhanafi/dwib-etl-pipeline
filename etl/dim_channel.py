@@ -5,6 +5,16 @@ def etl_dim_channel(df, con):
     print("\t\tETL Dim_Channel")
 
     try:
+        # hanya proses data baru 
+        existing_ids_df = con.execute("SELECT ChannelName FROM Dim_Channel").fetchdf()
+        existing_ids = set(existing_ids_df["ChannelName"])
+        new_data = df[~df["Channel"].isin(existing_ids)]
+
+        if new_data.empty:
+            print("\t\tℹ️  Tidak ada baru yang perlu dimuat.")
+            return True
+            
+        
         # Ambil data unik Channel
         dim_channel_df = df[["Channel"]].drop_duplicates()
 

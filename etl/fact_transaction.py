@@ -5,6 +5,19 @@ def etl_fact_transaction(df, con):
     print("\t\tETL Fact_Transactions")
 
     try:
+        # hanya proses data baru 
+        existing_ids_df = con.execute("SELECT TransactionID FROM Fact_Transaction").fetchdf()
+        existing_ids = set(existing_ids_df["TransactionID"])
+        new_transaction_df = df[~df["TransactionID"].isin(existing_ids)]
+
+        if not new_transaction_df.empty:
+            print('PROSESS')
+        else:
+            print("\t\tℹ️  Tidak ada transaksi baru yang perlu dimuat.")
+            return True
+
+
+
         # Transform: Konversi tanggal transaksi
         df["TransactionDate"] = pd.to_datetime(df["TransactionDate"])
         df["TimeID"] = df["TransactionDate"].dt.strftime("%Y%m%d").astype(int)
