@@ -96,7 +96,7 @@ def setup():
         con.execute(ddl_script)
         print("\tDDL Script sukses dijalankan!")
 
-        tables = con.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'main'").fetchdf()
+        # tables = con.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'main'").fetchdf()
 
         # # Looping untuk menampilkan struktur semua tabel
         # for table in tables["table_name"]:

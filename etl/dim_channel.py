@@ -13,6 +13,7 @@ def etl_dim_channel(df, con):
         dim_channel_df["ChannelID"] = df["Channel"].map(id_mapping)
         dim_channel_df["ChannelName"] = df["Channel"].fillna("Unknown")
         dim_channel_df = dim_channel_df.drop(columns=["Channel"])
+        print("\t\t✅ Transform ChannelID berhasil!")
 
         # Insert ke DuckDB
         for _, row in dim_channel_df.iterrows():
@@ -32,4 +33,5 @@ def etl_dim_channel(df, con):
         raise ValueError(f"{e}")
 
     finally:
-        print("\t\tProses Dim Channel Selesai!")
+        print("\t\tProses Dim_Channel Selesai!")
+        print("\n")

@@ -1,5 +1,5 @@
 from etl.dim_channel import etl_dim_channel
-from etl.dim_customer import etl_dim_customer
+# from etl.dim_customer import etl_dim_customer
 from etl.dim_device import etl_dim_device
 from etl.dim_location import etl_dim_location
 from etl.dim_time import etl_dim_time
@@ -21,29 +21,32 @@ def run_etl():
     data_path = os.path.join(base_dir, "..", "data", "transactions.csv")
     data_path = os.path.normpath(data_path)
     df = pd.read_csv(data_path)
-    print("\t✅Proses extract data berhasil!")
+    print("\t✅ Proses extract data berhasil!")
 
     con = duckdb.connect("db/dwh-perbankan.duckdb")
-    print("\t✅Koneksi ke database berhasil!")
+    print("\t✅ Koneksi ke database berhasil!")
 
     # etl_dim_customer(df, con)
-    # etl_dim_time(df, con)
-    # etl_dim_location(df, con)
-    # etl_dim_device(df, con)
     etl_dim_channel(df, con)
+    etl_dim_time(df, con)
+    etl_dim_location(df, con)
+    etl_dim_device(df, con)
     # etl_dim_type(df, con)
-    # etl_fact_transaction(df, con)
+    etl_fact_transaction(df, con)
 
   except FileNotFoundError:
       print(f"\t\t❌File transaksi tidak ditemukan di path: {data_path}")
+      print("\n")
       return False
 
   except duckdb.Error as e:
       print(f"\t\t❌Gagal koneksi atau query DuckDB: {e}")
+      print("\n")
       return False
 
   except Exception as e:
       print(f"\t\t❌Terjadi error tak terduga di ETL: {e}")
+      print("\n")
       return False
 
   finally:
