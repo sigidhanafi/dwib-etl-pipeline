@@ -11,7 +11,7 @@ def etl_dim_device(df, con):
   # Tambahkan IP Address default jika tidak ada
   dim_device_df["IPAddress"] = "0.0.0.0" 
 
-  # Insert
+  # Insert ke DuckDB
   for _, row in dim_device_df.iterrows():
       con.execute(f"""
           INSERT INTO Dim_Device (DeviceID, IPAddress)
