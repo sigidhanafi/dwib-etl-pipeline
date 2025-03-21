@@ -24,6 +24,6 @@
 
 
 
-Note: If you run with Python VENV, 
+Note: If you run with Python VENV:
 1. cd to project directory
 2. source dwh-env/bin/activate
