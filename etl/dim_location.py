@@ -8,7 +8,7 @@ def etl_dim_location(df, con):
   # Ambil data lokasi unik
   dim_location_df = df[["Location"]].drop_duplicates()
 
-  # Tambahkan ID lokasi secara manual
+  # Menambahkan ID lokasi secara manual
   dim_location_df["LocationID"] = range(1, len(dim_location_df) + 1)
 
   # Insert ke DuckDB
