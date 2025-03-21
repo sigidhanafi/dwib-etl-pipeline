@@ -8,7 +8,7 @@ def etl_dim_channel(df, con):
   # Ambil data unik Channel
   dim_channel_df = df[["Channel"]].drop_duplicates()
 
-  # Tambahkan nama channel jika tidak ada di CSV
+  # Tambahkan nama channel jika tidak ada di dataset
   id_mapping = {"ATM": 1, "Online": 2, "Branch": 3}
   dim_channel_df["ChannelID"] = df["Channel"].map(id_mapping)
   dim_channel_df["ChannelName"] = df["Channel"].fillna("Unknown")
