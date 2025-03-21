@@ -1,0 +1,9 @@
+-Read-
+
+Lampirkan
+Dokumen Kebutuhan Bisnis (PDF/Word, maks. 3 halaman)
+Diagram Skema Data Warehouse (image file atau URL)3. 4. 5. Script SQL DDL (file .sql)
+Deskripsi Dataset (PDF/Word, maks. 2 halaman)
+Script ETL Python/pandas (file .py atau .ipynb)
+
+-end-
