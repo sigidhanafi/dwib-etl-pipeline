@@ -25,5 +25,8 @@
 
 
 Note: If you run with Python VENV:
-1. cd to project directory
-2. source dwh-env/bin/activate
+git clone this repo
+cd to project directory
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
