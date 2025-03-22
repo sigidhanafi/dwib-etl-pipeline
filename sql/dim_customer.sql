@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS Dim_Customer (
     CustomerID VARCHAR NOT NULL,
     CustomerAge INT,
     CustomerOccupation VARCHAR(50),
-    EffectiveFrom TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    EffectiveTo TIMESTAMP,
+    PreviousCustomerOccupation VARCHAR(50),
+    AccountBalance DECIMAL(15,2),
+    EffectiveDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    EndDate TIMESTAMP,
     IsCurrent BOOLEAN DEFAULT TRUE
 );

@@ -1,5 +1,5 @@
 from etl.dim_channel import etl_dim_channel
-# from etl.dim_customer import etl_dim_customer
+from etl.dim_customer import etl_dim_customer
 from etl.dim_device import etl_dim_device
 from etl.dim_location import etl_dim_location
 from etl.dim_time import etl_dim_time
@@ -26,7 +26,7 @@ def run_etl():
     con = duckdb.connect("db/dwh-perbankan.duckdb")
     print("\t✅ Koneksi ke database berhasil!")
 
-    # etl_dim_customer(df, con)
+    etl_dim_customer(df, con)
     etl_dim_channel(df, con)
     etl_dim_time(df, con)
     etl_dim_location(df, con)
