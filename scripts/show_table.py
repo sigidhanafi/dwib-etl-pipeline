@@ -1,6 +1,8 @@
 import duckdb
 from pathlib import Path
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 db_dir = Path("db/dwh-perbankan.duckdb")
 # print(db_dir)
@@ -58,3 +60,15 @@ result = con.execute(
 
 # Tampilkan hasil
 print(result)
+
+
+# Buat bar chart dengan Seaborn
+plt.figure(figsize=(12, 6))
+sns.barplot(data=df, x="AgeSegment", y="TotalCustomers", hue="CustomerLocation")
+
+plt.title("Segmentasi Customer per Umur dan Lokasi")
+plt.xlabel("Segment Umur")
+plt.ylabel("Jumlah Customer")
+plt.legend(title="Lokasi")
+plt.tight_layout()
+plt.show()
