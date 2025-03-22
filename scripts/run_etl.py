@@ -13,7 +13,9 @@ import os
 def run_etl():
   print(f"Proses ETL:")
   print("\tMemulai proses ETL!")
+
   con = None
+  success = False 
 
   try:
     # Lokasi file CSV relatif terhadap script ini
@@ -26,6 +28,8 @@ def run_etl():
     con = duckdb.connect("db/dwh-perbankan.duckdb")
     print("\t✅ Koneksi ke database berhasil!")
 
+    con.execute("BEGIN TRANSACTION")
+
     etl_dim_customer(df, con)
     etl_dim_channel(df, con)
     etl_dim_time(df, con)
@@ -33,6 +37,8 @@ def run_etl():
     etl_dim_device(df, con)
     etl_dim_type(df, con)
     etl_fact_transaction(df, con)
+
+    success = True
 
   except FileNotFoundError:
       print(f"\t\t❌File transaksi tidak ditemukan di path: {data_path}")
@@ -51,6 +57,11 @@ def run_etl():
 
   finally:
       if con:
+            if success:
+                con.execute("COMMIT")
+            else:
+                con.execute("ROLLBACK")
+
             # Tutup koneksi
             con.close()
             print("\tKoneksi database ditutup!")

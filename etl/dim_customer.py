@@ -54,7 +54,7 @@ def etl_dim_customer(df, con):
 
                 # jika tidak ada, maka update data yang lama ke IsCurrent = false
                 if not existing_samedata_customer:
-                    # Update CustomerAge Jika Ada
+                    # Update CustomerAge Jika Ada SCD Type 1
                     con.execute("""
                         UPDATE Dim_Customer 
                         SET CustomerAge = ?
