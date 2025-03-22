@@ -19,5 +19,42 @@ result = con.execute(
     "SELECT * FROM fact_transaction"
 ).fetchdf()
 
+result = con.execute(
+"""
+    SELECT
+        l.Location AS CustomerLocation,
+        -- Segmentasi umur dalam rentang
+        CASE 
+            WHEN c.CustomerAge < 30 THEN 'Under 30'
+            WHEN c.CustomerAge BETWEEN 30 AND 39 THEN '30-39'
+            WHEN c.CustomerAge BETWEEN 40 AND 49 THEN '40-49'
+            WHEN c.CustomerAge BETWEEN 50 AND 59 THEN '50-59'
+            WHEN c.CustomerAge >= 60 THEN '60+'
+            ELSE 'Unknown'
+        END AS AgeSegment,
+        t.Year AS TransactionYear,
+        t.Month AS TransactionMonth,
+        COUNT(DISTINCT f.CustomerID) AS TotalCustomers,
+        COUNT(f.TransactionID) AS TotalTransactions,
+        SUM(f.TransactionAmount) AS TotalTransactionAmount
+    FROM Fact_Transaction f
+    JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+    JOIN Dim_Location l ON f.LocationID = l.LocationID
+    JOIN Dim_Time t ON f.TimeID = t.TimeID
+    WHERE c.IsCurrent = TRUE
+    GROUP BY 
+        l.Location,
+        AgeSegment,
+        t.Year,
+        t.Month
+    ORDER BY 
+        l.Location,
+        t.Year,
+        t.Month,
+        AgeSegment;
+
+"""
+).fetchdf()
+
 # Tampilkan hasil
-print(result.head(10))
+print(result)
