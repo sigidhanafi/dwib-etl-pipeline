@@ -1,6 +1,8 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from datetime import datetime
+from airflow.utils.dates import days_ago
+from airflow.utils.email import send_email
+from datetime import datetime, timedelta
 import pandas as pd
 import os
 import duckdb
@@ -37,6 +39,20 @@ def load_data(name, etl_func):
         print(f"✅ {name} berhasil diproses")
     return task
 
+def on_failure_callback(context):
+    dag_id = context['dag'].dag_id
+    task_id = context['task_instance'].task_id
+    execution_date = context['execution_date']
+    log_url = context['task_instance'].log_url
+    subject = f"Airflow Task Failed: {task_id}"
+    html_content = f"""
+    <p><strong>DAG:</strong> {dag_id}</p>
+    <p><strong>Task:</strong> {task_id}</p>
+    <p><strong>Execution Time:</strong> {execution_date}</p>
+    <p><a href="{log_url}">View Log</a></p>
+    """
+    send_email("sigidhanafi@gmail.com", subject, html_content)
+
 
 with DAG(
     dag_id="etl_pipeline_dag",
@@ -47,9 +63,12 @@ with DAG(
 ) as dag:
 
     extract_task = PythonOperator(
-        task_id="extract_data",
-        python_callable=extract_data,
-    )
+      task_id="extract_data",
+      python_callable=extract_data,
+      retries=3, # Retry 3 kali
+      retry_delay=timedelta(seconds=30), # Delay antar retry
+      on_failure_callback=on_failure_callback,
+  )
 
     transform_task = PythonOperator(
         task_id="transform_data",
