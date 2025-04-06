@@ -29,15 +29,23 @@ def transform_data(**kwargs):
     print("✅ Transformasi data selesai")
 
 
-def load_data(name, etl_func):
+def load_data(name, etl_func, ignore_error=False):
     def task(**kwargs):
         ti = kwargs['ti']
         df = pd.read_json(ti.xcom_pull(task_ids="transform_data", key="transformed_data"))
         con = duckdb.connect("db/dwh-perbankan.duckdb")
-        etl_func(df, con)
-        con.close()
-        print(f"✅ {name} berhasil diproses")
+        try:
+            etl_func(df, con)
+            print(f"✅ {name} berhasil diproses")
+        except Exception as e:
+            if ignore_error:
+                print(f"⚠️ Gagal memproses {name}, tetapi akan dilewati. Error: {e}")
+            else:
+                raise e
+        finally:
+            con.close()
     return task
+
 
 def on_failure_callback(context):
     dag_id = context['dag'].dag_id
@@ -59,6 +67,8 @@ with DAG(
     start_date=datetime(2025, 1, 1),
     schedule_interval="@daily",
     catchup=False,
+    max_active_runs=1,
+    concurrency=1,
     tags=["etl", "dwh", "perbankan"],
 ) as dag:
 
@@ -77,7 +87,7 @@ with DAG(
 
     load_customer = PythonOperator(
         task_id="load_dim_customer",
-        python_callable=load_data("Dim Customer", dim_customer.etl_dim_customer),
+        python_callable=load_data("Dim Customer", dim_customer.etl_dim_customer, ignore_error=True),
     )
 
     load_channel = PythonOperator(

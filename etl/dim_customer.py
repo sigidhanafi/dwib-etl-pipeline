@@ -2,8 +2,10 @@ import duckdb
 import pandas as pd
 from datetime import datetime
 from decimal import Decimal
+import time
 
 def etl_dim_customer(df, con):
+    time.sleep(10)
     print("\t\tETL Dim_Customer")
 
     thereiIsNewDataAdded = False
@@ -114,5 +116,5 @@ def etl_dim_customer(df, con):
         else:
             print("\t\tℹ️  Tidak ada baru yang perlu dimuat.")
 
-        print("\t\tProses Dim_Channel Selesai!")
+        print("\t\tProses Dim_Customer Selesai!")
         print("\n")
