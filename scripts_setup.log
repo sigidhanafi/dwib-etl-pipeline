@@ -1,0 +1,20 @@
+2025-03-21 16:48:11,695 - INFO - Memproses DB Setup & Table in DuckDB!
+2025-03-21 16:48:11,730 - INFO - Berhasil terkoneksi ke DuckDB.
+2025-03-21 16:48:11,736 - ERROR - Error DuckDB: Catalog Error: Index with name "idx_fact_transaction_customer" already exists!
+2025-03-21 16:48:11,737 - ERROR - Traceback (most recent call last):
+  File "/Users/sigithanafi/Documents/programming/datawarehouse-project/dwh-perbankan/scripts/setup.py", line 106, in setup
+    con.execute(ddl_script)
+    ~~~~~~~~~~~^^^^^^^^^^^^
+duckdb.duckdb.CatalogException: Catalog Error: Index with name "idx_fact_transaction_customer" already exists!
+
+2025-03-21 16:48:11,742 - INFO - Koneksi ke DuckDB ditutup.
+2025-03-21 16:52:01,158 - INFO - Memproses DB Setup & Table in DuckDB!
+2025-03-21 16:52:01,162 - INFO - Berhasil terkoneksi ke DuckDB.
+2025-03-21 16:52:01,164 - ERROR - Error DuckDB: Catalog Error: Index with name "idx_fact_transaction_customer" already exists!
+2025-03-21 16:52:01,164 - ERROR - Traceback (most recent call last):
+  File "/Users/sigithanafi/Documents/programming/datawarehouse-project/dwh-perbankan/scripts/setup.py", line 106, in setup
+    con.execute(ddl_script)
+    ~~~~~~~~~~~^^^^^^^^^^^^
+duckdb.duckdb.CatalogException: Catalog Error: Index with name "idx_fact_transaction_customer" already exists!
+
+2025-03-21 16:52:01,168 - INFO - Koneksi ke DuckDB ditutup.

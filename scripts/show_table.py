@@ -21,7 +21,7 @@ result = con.execute(
     "SELECT * FROM fact_transaction"
 ).fetchdf()
 
-result = con.execute(
+df = con.execute(
 """
     SELECT
         l.Location AS CustomerLocation,
@@ -59,16 +59,46 @@ result = con.execute(
 ).fetchdf()
 
 # Tampilkan hasil
-print(result)
+# print(result)
 
 
-# Buat bar chart dengan Seaborn
-plt.figure(figsize=(12, 6))
-sns.barplot(data=df, x="AgeSegment", y="TotalCustomers", hue="CustomerLocation")
+# # Buat bar chart dengan Seaborn
+# plt.figure(figsize=(12, 6))
+# sns.barplot(data=df, x="AgeSegment", y="TotalCustomers", hue="CustomerLocation")
 
-plt.title("Segmentasi Customer per Umur dan Lokasi")
-plt.xlabel("Segment Umur")
-plt.ylabel("Jumlah Customer")
-plt.legend(title="Lokasi")
-plt.tight_layout()
+# plt.title("Segmentasi Customer per Umur dan Lokasi")
+# plt.xlabel("Segment Umur")
+# plt.ylabel("Jumlah Customer")
+# plt.legend(title="Lokasi")
+# plt.tight_layout()
+# plt.show()
+
+
+# Query sebaran umur pelanggan
+query = """
+SELECT
+    CASE 
+        WHEN CustomerAge < 20 THEN 'Under 20'
+        WHEN CustomerAge BETWEEN 20 AND 29 THEN '20-29'
+        WHEN CustomerAge BETWEEN 30 AND 39 THEN '30-39'
+        WHEN CustomerAge BETWEEN 40 AND 49 THEN '40-49'
+        WHEN CustomerAge BETWEEN 50 AND 59 THEN '50-59'
+        WHEN CustomerAge >= 60 THEN '60+'
+        ELSE 'Unknown'
+    END AS AgeSegment,
+    COUNT(DISTINCT CustomerID) AS TotalCustomers
+FROM Dim_Customer
+WHERE IsCurrent = TRUE
+GROUP BY AgeSegment
+ORDER BY AgeSegment;
+"""
+
+# Eksekusi query dan ambil hasil ke dataframe
+df = con.execute(query).df()
+
+# Plot pie chart
+plt.figure(figsize=(8, 8))
+plt.pie(df["TotalCustomers"], labels=df["AgeSegment"], autopct='%1.1f%%', startangle=140)
+plt.title("Sebaran Umur Pelanggan (Pie Chart)")
+plt.axis('equal')  # Membuat pie chart jadi lingkaran sempurna
 plt.show()
