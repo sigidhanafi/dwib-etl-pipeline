@@ -24,7 +24,7 @@ def transform_data(**kwargs):
     df = pd.read_json(raw_data)
     df = df.drop_duplicates()
     kwargs['ti'].xcom_push(key="transformed_data", value=df.to_json(orient="records"))
-    print("🔧 Transformasi umum selesai")
+    print("✅ Transformasi data selesai")
 
 
 def load_data(name, etl_func):
@@ -40,7 +40,7 @@ def load_data(name, etl_func):
 
 with DAG(
     dag_id="etl_pipeline_dag",
-    start_date=datetime(2024, 1, 1),
+    start_date=datetime(2025, 1, 1),
     schedule_interval="@daily",
     catchup=False,
     tags=["etl", "dwh", "perbankan"],
@@ -91,11 +91,14 @@ with DAG(
         python_callable=load_data("Fact Transaction", fact_transaction.etl_fact_transaction),
     )
 
-    extract_task >> transform_task >> [
-        load_customer,
-        load_channel,
-        load_time,
-        load_location,
-        load_device,
-        load_type,
-    ] >> load_fact
+    # extract_task >> transform_task >> [
+    #     load_customer,
+    #     load_channel,
+    #     load_time,
+    #     load_location,
+    #     load_device,
+    #     load_type,
+    # ] >> load_fact
+
+    extract_task >> transform_task >> load_customer >> load_channel >> load_time >> load_location >> load_device >> load_type >> load_fact
+

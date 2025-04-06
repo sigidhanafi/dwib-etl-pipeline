@@ -59,6 +59,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
+    AIRFLOW__WEBSERVER__SECRET_KEY: 'supersecretkey123'
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
     # See https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#scheduler-health-check-server
@@ -117,6 +118,8 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./etl:/opt/airflow/etl
+      - ./data:/opt/airflow/data
+      - ./db:/opt/airflow/db
       - ./requirements.txt:/requirements.txt
     command: >
       bash -c "
@@ -141,6 +144,8 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./etl:/opt/airflow/etl
+      - ./data:/opt/airflow/data
+      - ./db:/opt/airflow/db
       - ./requirements.txt:/requirements.txt
     command: >
       bash -c "pip install --no-cache-dir -r /requirements.txt && airflow scheduler"
@@ -161,6 +166,8 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./etl:/opt/airflow/etl
+      - ./data:/opt/airflow/data
+      - ./db:/opt/airflow/db
       - ./requirements.txt:/requirements.txt
     command: >
       bash -c "pip install -r /requirements.txt && airflow celery worker"
