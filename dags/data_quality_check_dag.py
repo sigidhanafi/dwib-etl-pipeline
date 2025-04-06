@@ -15,7 +15,7 @@ def check_customer_age_range():
     with duckdb.connect(DB_PATH) as con:
         invalid_count = con.execute("""
             SELECT COUNT(*) FROM Dim_Customer 
-            WHERE CustomerAge < 0 OR CustomerAge > 80
+            WHERE CustomerAge < 17 OR CustomerAge > 80
         """).fetchone()[0]
         if invalid_count > 0:
             raise ValueError(f"Terdapat {invalid_count} baris dengan CustomerAge diluar batas wajar")
