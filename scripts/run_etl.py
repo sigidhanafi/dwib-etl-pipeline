@@ -5,6 +5,7 @@ from etl.dim_location import etl_dim_location
 from etl.dim_time import etl_dim_time
 from etl.dim_type import etl_dim_type
 from etl.fact_transaction import etl_fact_transaction
+from etl.data_mart_historical import data_mart_historical
 
 import pandas as pd
 import duckdb
@@ -37,6 +38,7 @@ def run_etl():
     etl_dim_device(df, con)
     etl_dim_type(df, con)
     etl_fact_transaction(df, con)
+    data_mart_historical(df, con)
 
     success = True
 

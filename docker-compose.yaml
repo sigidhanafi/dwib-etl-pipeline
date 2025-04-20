@@ -309,5 +309,15 @@ services:
       airflow-init:
         condition: service_completed_successfully
 
+  # metabase service
+  metabase:
+    image: metabase/metabase
+    container_name: metabase
+    platform: linux/amd64
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./db:/metabase-data
+
 volumes:
   postgres-db-volume:
