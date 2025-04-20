@@ -47,6 +47,8 @@ Definisi:
 3. Deskripsi Dataset - [Data Warehouse & ETL](https://github.com/sigidhanafi/dwib-etl-pipeline/blob/main/Lampiran/Data%20Warehouse%20and%20ETL.pdf)
 4. Script ETL Python/pandas (repository)
 5. [Orkestrasi Data Warehouse](https://github.com/sigidhanafi/dwib-etl-pipeline/blob/main/Lampiran/Data%20Orchestration%20Apache%20Airflow.pdf)
+6. Visualisasi Data dan Business Intelligence
+7. Demo dan SS Dashboard Visualisasi
 
 
 
